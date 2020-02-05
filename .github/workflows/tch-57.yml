@@ -36,7 +36,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Check token 1
-        if: github.secrets.PERSONAL_ACCESS_TOKEN != ''
+        if: github.secrets.PERSONAL_ACCESS_TOKEN
         run: echo "Token is available"
       - name: Check token 2
         env:
