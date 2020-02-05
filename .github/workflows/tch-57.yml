@@ -1,0 +1,50 @@
+name: Tch-57 Access token conditional
+
+on:
+  push:
+    branches-ignore:
+      - 'wip-**'
+      - '**-wip'
+      - 'master'
+      - 'alpha'
+      - 'beta'
+      - 'next'
+
+jobs:
+  build:
+    name: Test conditional use of personal access token
+
+    env:
+      CI: true
+      NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout with personal access token
+        if: github.secrets.PERSONAL_ACCESS_TOKEN != ''
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      - name: Checkout without personal access token
+        if: github.secrets.PERSONAL_ACCESS_TOKEN == ''
+        uses: actions/checkout@v2
+      - name: Fetch
+        if: github.secrets.CI_NEEDS_GIT_HISTORY != ''
+        run: git fetch --prune --unshallow && git fetch origin 'master:master'
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Check token 1
+        if: github.secrets.PERSONAL_ACCESS_TOKEN != ''
+        run: echo "Token is available"
+      - name: Check token 2
+        if: github.secrets.PERSONAL_ACCESS_TOKEN == ''
+        run: echo "Token is not available"
