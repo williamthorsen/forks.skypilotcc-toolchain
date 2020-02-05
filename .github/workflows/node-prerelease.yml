@@ -48,7 +48,7 @@ jobs:
           git config --global user.name ${GITHUB_ACTOR}
           yarn --silent bump-version
       - name: Publish
-        if: success()
+        if: success() && github.secrets.NPM_AUTH_TOKEN != ''
         run: |
           yarn config set //registry.yarnpkg.com/:_authToken=$NPM_AUTH_TOKEN
           yarn run publish:default --tag $(git symbolic-ref --short HEAD)
