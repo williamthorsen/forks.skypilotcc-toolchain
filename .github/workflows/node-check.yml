@@ -1,4 +1,4 @@
-name: Check & build Node package
+name: Node package code check
 
 on:
   push:
