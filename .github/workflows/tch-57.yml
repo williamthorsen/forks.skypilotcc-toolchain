@@ -28,13 +28,16 @@ jobs:
 
     steps:
       - name: Checkout with personal access token
-        if: github.secrets.PERSONAL_ACCESS_TOKEN != ''
+        if: github.secrets.PERSONAL_ACCESS_TOKEN
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       - name: Checkout without personal access token
-        if: github.secrets.PERSONAL_ACCESS_TOKEN == ''
+        if: ! github.secrets.PERSONAL_ACCESS_TOKEN
         uses: actions/checkout@v2
+      - name: Check for nonexistent token
+        if: ! github.secrets.NONEXISTENT_TOKEN
+        run: echo "NONEXISTENT_TOKEN does not exist"
       - name: Fetch
         if: github.secrets.CI_NEEDS_GIT_HISTORY != ''
         run: git fetch --prune --unshallow && git fetch origin 'master:master'
