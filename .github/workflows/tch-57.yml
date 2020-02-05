@@ -33,10 +33,10 @@ jobs:
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       - name: Checkout without personal access token
-        if: ! github.secrets.PERSONAL_ACCESS_TOKEN
+        if: github.secrets.PERSONAL_ACCESS_TOKEN || false
         uses: actions/checkout@v2
       - name: Check for nonexistent token
-        if: ! github.secrets.NONEXISTENT_TOKEN
+        if: github.secrets.NONEXISTENT_TOKEN != ''
         run: echo "NONEXISTENT_TOKEN does not exist"
       - name: Fetch
         if: github.secrets.CI_NEEDS_GIT_HISTORY != ''
