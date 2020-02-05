@@ -17,6 +17,7 @@ jobs:
     env:
       CI: true
       NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
     runs-on: ubuntu-latest
 
@@ -28,16 +29,13 @@ jobs:
 
     steps:
       - name: Checkout with personal access token
-        if: github.secrets.PERSONAL_ACCESS_TOKEN
+        if: {{ $PERSONAL_ACCESS_TOKEN != '' }}
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       - name: Checkout without personal access token
-        if: github.secrets.PERSONAL_ACCESS_TOKEN || false
+        if: {{ $PERSONAL_ACCESS_TOKEN == '' }}
         uses: actions/checkout@v2
-      - name: Check for nonexistent token
-        if: github.secrets.NONEXISTENT_TOKEN != ''
-        run: echo "NONEXISTENT_TOKEN does not exist"
       - name: Fetch
         if: github.secrets.CI_NEEDS_GIT_HISTORY != ''
         run: git fetch --prune --unshallow && git fetch origin 'master:master'
