@@ -42,6 +42,6 @@ jobs:
         env:
           PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           NONEXISTENT_TOKEN: ${{ secrets.NONEXISTENT_TOKEN }}
-        run:
-          test -n $PERSONAL_ACCESS_TOKEN && echo "PAT is available" || "PAT is NOT available"
-          test -n $NONEXISTENT_TOKEN && echo "Nonexistent token is available" || "Nonexistent token is NOT available"
+        run: |
+          if test -n "$PERSONAL_ACCESS_TOKEN" ; then echo "PAT is available" ; else echo "PAT is NOT available" ; fi
+          if test -n "$NONEXISTENT_TOKEN" ; then echo "Nonexistent token is available" ; else echo "Nonexistent token is NOT available" ; fi
