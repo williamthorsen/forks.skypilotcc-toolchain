@@ -1,9 +1,11 @@
-name: Ven-242 Test OR parameter in expression
+name: Ven-242 Test 1
 
 on:
   push:
     branches:
       - 'ven-242-*'
+    paths-ignore:
+      - 'src/dummy*'
 
 jobs:
   publish:
@@ -40,7 +42,7 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name ${GITHUB_ACTOR}
-          echo "Dummy file" > src/dummy.js
+          echo "Dummy file" > src/dummy1.js
           git add -A
           git commit --message "Added dummy file"
       - name: Push changes
