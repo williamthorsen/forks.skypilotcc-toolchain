@@ -3,7 +3,7 @@ name: Ven-242 Test OR parameter in expression
 on:
   push:
     branches:
-      - 'ven-242-wip'
+      - 'ven-242-*'
 
 jobs:
   publish:
