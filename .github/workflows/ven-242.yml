@@ -1,0 +1,48 @@
+name: Ven-242 Test OR parameter in expression
+
+on:
+  push:
+    branches:
+      - 'ven-242-wip'
+
+jobs:
+  publish:
+    name: Create stable release
+
+    env:
+      CI: true
+      NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+      - name: Fetch
+        run: |
+          git fetch --prune --unshallow
+          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Commit files
+        if: success()
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name ${GITHUB_ACTOR}
+          echo "Dummy file" > src/dummy.js
+          git add -A
+          git commit --message "Added dummy file"
+      - name: Push changes
+        if: success()
+        run: git push origin $(git symbolic-ref --short HEAD)
